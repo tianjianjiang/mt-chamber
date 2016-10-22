@@ -53,9 +53,9 @@ class DistributorVariable:
 
 
 class Processor:
-	def __init__(self, commandname, argdict, insize, outsize, threads=1, unsrt_limit=100):
+	def __init__(self, commandname, argdict, insize, outsize, threads=1, unsrt_limit=100, has_extensions=False):
 		try:
-			if hasattr(__import__("extensions", fromlist=[commandname]), commandname):
+			if has_extensions and hasattr(__import__("extensions", fromlist=[commandname]), commandname):
 				self.klass = getattr(__import__("extensions", fromlist=[commandname]), commandname).Command
 			elif hasattr(__import__("plugins", fromlist=[commandname]), commandname):
 				self.klass = getattr(__import__("plugins", fromlist=[commandname]), commandname).Command
@@ -198,7 +198,7 @@ class ScriptRunner:
 			return "\n"
 		return esc_ch
 
-	def __init__(self, lines, threads=1, unsrt_limit=100):
+	def __init__(self, lines, threads=1, unsrt_limit=100, has_extensions=False):
 		variables = {}
 		alias = {}
 		self.procs = []
@@ -293,7 +293,7 @@ class ScriptRunner:
 			if commandthreads == -1:
 				commandthreads = self.threads
 			try:
-				proc = Processor(command, options, len(invar_name), len(outvar_name), threads=commandthreads, unsrt_limit=unsrt_limit)
+				proc = Processor(command, options, len(invar_name), len(outvar_name), threads=commandthreads, unsrt_limit=unsrt_limit, has_extensions=has_extensions)
 			except MessageException as e:
 				raise ChamberInitialError(e, n+1)
 			except Exception as e:

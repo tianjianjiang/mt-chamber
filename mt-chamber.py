@@ -26,6 +26,9 @@ def main():
 
 	if args.extensions_parent_path:
 		sys.path.append(args.extensions_parent_path)
+		has_extensions = True
+	else:
+		has_extensions = False
 
 	if args.FILE is None:
 		if not args.prompt:
@@ -40,7 +43,7 @@ def main():
 			return
 
 	try:
-		script = ScriptRunner(fstream, threads=args.threads, unsrt_limit=unsrt_limit)
+		script = ScriptRunner(fstream, threads=args.threads, unsrt_limit=unsrt_limit, has_extensions=has_extensions)
 	except ChamberInitialError as e:
 		print("At line %d: %s" % (e.linenumber, str(e.value)), file=sys.stderr)
 		if e.trace:
