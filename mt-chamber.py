@@ -10,6 +10,7 @@ def main():
 	parser.add_argument("-t", "--threads", type=int, default=1, help="number of threads (default: 1)")
 	parser.add_argument("-u", "--unsrt-limit", type=int, default=-1, help="acceptance distance of inner incorrect order (default: threads * 100)")
 	parser.add_argument("-p", "--prompt", action="store_true", help="run with prompt")
+	parser.add_argument("-e", "--extensions-parent-path", dest="extensions_parent_path", default=None, help="parent folder path of extended plugins")
 	parser.add_argument("FILE", nargs="?", default=None, help="Chamber script file (default: stdin)")
 	args = parser.parse_args()
 
@@ -22,6 +23,9 @@ def main():
 		unsrt_limit = args.unsrt_limit
 	if unsrt_limit < args.threads:
 		parser.error("--unsrt-limit must be larger than --threads")
+
+	if args.extensions_parent_path:
+		sys.path.append(args.extensions_parent_path)
 
 	if args.FILE is None:
 		if not args.prompt:

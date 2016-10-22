@@ -55,7 +55,9 @@ class DistributorVariable:
 class Processor:
 	def __init__(self, commandname, argdict, insize, outsize, threads=1, unsrt_limit=100):
 		try:
-			if hasattr(__import__("plugins", fromlist=[commandname]), commandname):
+			if hasattr(__import__("extensions", fromlist=[commandname]), commandname):
+				self.klass = getattr(__import__("extensions", fromlist=[commandname]), commandname).Command
+			elif hasattr(__import__("plugins", fromlist=[commandname]), commandname):
 				self.klass = getattr(__import__("plugins", fromlist=[commandname]), commandname).Command
 			else:
 				self.klass = getattr(__import__("ChamberLang.commands", fromlist=[commandname]), commandname).Command
